@@ -21,6 +21,13 @@ module Swagger
           end
         end
 
+        describe '#verb' do
+          context 'get' do
+            subject { swagger.paths['/pets'].get.verb }
+            it { is_expected.to eq(:get) }
+          end
+        end
+
         describe '#tags' do
           subject { swagger.paths['/pets'].get.tags }
           it { is_expected.to eq(%w(Things That Do Stuff)) }
