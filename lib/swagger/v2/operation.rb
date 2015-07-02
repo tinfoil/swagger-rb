@@ -34,7 +34,9 @@ module Swagger
 
       # The HTTP verb for the operation.
       def verb
-        parent.operations.key self
+        parent.operations.each do |verb, operation|
+          return verb if self.equal?(operation)
+        end
       end
 
       def signature
