@@ -23,7 +23,7 @@ module Swagger
 
       schema.resolve_all_refs(schema)
 
-      schema.to_hash
+      schema
     end
 
     protected
