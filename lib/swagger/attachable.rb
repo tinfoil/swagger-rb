@@ -16,14 +16,14 @@ module Swagger
 
     # @api private
     def attach_to_children
-      each_value do |v| # rubocop:disable Style/Next
+      each_value do |v|
         v.attach_parent self if v.respond_to? :attach_parent
         if v.respond_to? :each_value
           v.each_value do |sv|
             sv.attach_parent self if sv.respond_to? :attach_parent
           end
         end
-        if v.respond_to? :each
+        if v.respond_to? :each # rubocop:disable Style/Next
           v.each do |sv|
             sv.attach_parent self if sv.respond_to? :attach_parent
           end

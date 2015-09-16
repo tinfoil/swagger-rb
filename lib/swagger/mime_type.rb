@@ -7,7 +7,7 @@ module Swagger
     extend Forwardable
     def_delegators :@mime_type, :media_type, :sub_type
 
-    MIME_TYPE_FORMAT = /(\w+)\/(\w+\.)?([\w\.]+)(\+\w+)?\s*(;.*)?/
+    MIME_TYPE_FORMAT = %r{(\w+)/(\w+\.)?([\w\.]+)(\+\w+)?\s*(;.*)?}
 
     COMMON_ALIASES = {
       txt:    'text/plain',

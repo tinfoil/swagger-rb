@@ -21,12 +21,7 @@ module Swagger
         schema.merge!(model)
       end
 
-      count = 0
-      until schema.refs_resolved?
-        fail 'Could not resolve non-remote $refs 5 cycles - circular references?' if count >= 5
-        schema.resolve_refs
-        count += 1
-      end
+      schema.resolve_all_refs(schema)
 
       schema.to_hash
     end
@@ -35,6 +30,15 @@ module Swagger
 
     def refs
       deep_find_all('$ref')
+    end
+
+    def resolve_all_refs(schema)
+      count = 0
+      until schema.refs_resolved?
+        fail 'Could not resolve non-remote $refs 5 cycles - circular references?' if count >= 5
+        schema.resolve_refs
+        count += 1
+      end
     end
 
     def resolve_refs
