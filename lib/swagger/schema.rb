@@ -16,7 +16,7 @@ module Swagger
     def parse
       schema = clone
       if schema.key?('$ref')
-        key = schema.delete('$ref')
+        key = schema.delete('$ref').split('/').last
         model = root.definitions[key]
         schema.merge!(model)
       end
