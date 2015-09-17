@@ -38,7 +38,7 @@ module Swagger
         dash.instance_variable_set(property, coercions)
       end
 
-      def [](key, &_block)
+      def [](key, &_block) # rubocop:disable Lint/NestedMethodDefinition
         super(key) do |v|
           if block_given?
             v ||= send(:[]=, key, {})
@@ -77,7 +77,7 @@ module Swagger
                         # include is public in Ruby 2.1+, hack to support older
                         bash_klass.send(:include, Bash)
                       end
-      ) unless klass.const_defined? 'Bash'
+                     ) unless klass.const_defined? 'Bash'
 
       klass.const_get('Bash')
     end

@@ -16,25 +16,29 @@ module Swagger
     def parse
       schema = clone
       if schema.key?('$ref')
-        key = schema.delete('$ref')
+        key = schema.delete('$ref').split('/').last
         model = root.definitions[key]
         schema.merge!(model)
       end
 
-      count = 0
-      until schema.refs_resolved?
-        fail 'Could not resolve non-remote $refs 5 cycles - circular references?' if count >= 5
-        schema.resolve_refs
-        count += 1
-      end
+      schema.resolve_all_refs(schema)
 
-      schema.to_hash
+      schema
     end
 
     protected
 
     def refs
       deep_find_all('$ref')
+    end
+
+    def resolve_all_refs(schema)
+      count = 0
+      until schema.refs_resolved?
+        fail 'Could not resolve non-remote $refs 5 cycles - circular references?' if count >= 5
+        schema.resolve_refs
+        count += 1
+      end
     end
 
     def resolve_refs
