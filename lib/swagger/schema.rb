@@ -16,8 +16,7 @@ module Swagger
     def parse
       schema = clone
       if schema.key?('$ref')
-        key = schema.delete('$ref').split('/').last
-        model = root.definitions[key]
+        model = model_from_reference(schema.delete('$ref'))
         schema.merge!(model)
       end
 
@@ -42,21 +41,27 @@ module Swagger
     end
 
     def resolve_refs
-      items_and_props = [deep_select('items'), deep_select('properties')].flatten.compact
-      items_and_props.each do |item|
-        key = item.delete('$ref')
-        next if remote_ref? key
-        model = root.definitions[key]
-        item.merge!(model)
+      items_and_props = [deep_select('items'), deep_select('properties').map(&:values)].flatten.compact
+      items_and_props.each do |schema|
+        next unless schema.key?('$ref')
+
+        model = model_from_reference(schema.delete('$ref'))
+        schema.merge!(model)
       end
     end
 
     def refs_resolved?
       return true if refs.nil?
-
       refs.all? do |ref|
         remote_ref?(ref)
       end
+    end
+
+    def model_from_reference(ref)
+      fail "Remote references are not yet supported: #{ref}" if remote_ref?(ref)
+
+      key = ref.split('/').last
+      root.definitions[key]
     end
 
     def remote_ref?(ref)
