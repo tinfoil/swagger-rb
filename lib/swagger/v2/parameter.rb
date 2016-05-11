@@ -24,6 +24,7 @@ module Swagger
       field :items, Hash # TODO: Items Object
       field :collectionFormat, String
       field :default, Object
+      field :allowEmptyValue, Swagger::Boolean
       # @!endgroup
 
       include DeterministicJSONSchema
